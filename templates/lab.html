@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{{ lab.title }} · OSWE Lab</title><link rel="stylesheet" href="/static/style.css"><script src="/static/lab.js" defer></script></head>
+<body data-lab="{{ lab_id }}">
+<header><a class="brand" href="/">MIND THE AI GAP <span>/ SECURITY LABS</span></a><a href="https://github.com/ALVINNNNN/OSWE-lab">Source repository ↗</a></header>
+<main>
+<div class="eyebrow">WHITE-BOX PRACTICE / LAB {{ lab.number }}</div>
+<h1>{{ lab.title }}<span class="accent">.</span></h1><p class="lead">{{ lab.subtitle }}</p>
+<div class="tags"><span>{{ lab.level }}</span><span>{{ lab.time }}</span><span>{{ 'PATCHED MODE' if patched else 'VULNERABLE MODE' }}</span></div>
+<section class="brief"><h2>Your mission</h2><p>{{ lab.brief }}</p><p>Read the code. Reproduce the issue. Automate your exploit. Explain and fix the root cause.</p><a class="button secondary" href="/source" target="_blank" rel="noopener">Read challenge source ↗</a> <a href="/source?file=shell" target="_blank" rel="noopener">Shared application source ↗</a></section>
+<div class="workspace"><section><h2>Target application</h2><p class="muted">These forms call real endpoints. Inspect requests with your browser or intercepting proxy.</p>
+{% for form in lab.forms %}
+<form class="api-form panel" action="{{ form.path }}" data-method="{{ form.method or 'POST' }}">
+<h3>{{ form.title }}</h3><code>{{ form.method or 'POST' }} {{ form.path }}</code>
+{% for name, value in form.fields.items() %}<label>{{ name }}{% if name == 'template' %}<textarea name="{{ name }}" rows="4">{{ value }}</textarea>{% else %}<input name="{{ name }}" value="{{ value }}" autocomplete="off" spellcheck="false">{% endif %}</label>{% endfor %}
+<button type="submit">Send request →</button><pre class="response" aria-live="polite">Awaiting request</pre></form>
+{% endfor %}</section>
+<aside>
+<section class="panel"><h2>Capture the flag</h2><p>Flags are generated for this instance. Submit the exact value you recovered.</p><form id="flag-form"><label>Flag<input name="flag" placeholder="OSWE{…}" required autocomplete="off"></label><button type="submit">Verify flag →</button><p id="flag-result" role="status"></p></form></section>
+<section class="panel"><h2>Need a nudge?</h2>{% for hint in lab.hints %}<details><summary>Hint {{ loop.index }}</summary><p>{{ hint }}</p></details>{% endfor %}</section>
+<section class="panel"><h2>Reset your instance</h2><p>Run this from the repository folder. It resets this lab and creates a new flag.</p><pre>docker compose restart {{ lab_id }}</pre><p>One container is one learner's workspace. Other labs stay unchanged.</p></section>
+<section class="panel"><h2>After you solve it</h2><p>Save your exploit and document its request sequence. Then compare it with the solution and rerun against patched mode.</p><a href="https://github.com/ALVINNNNN/OSWE-lab/blob/main/docs/SOLUTIONS.md">Reveal walkthroughs ↗</a></section>
+</aside></div></main><footer>Original OSWE-style practice · Not affiliated with OffSec · Disposable local targets</footer></body></html>
